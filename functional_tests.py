@@ -12,11 +12,16 @@ class NewVisitorTest(unittest.TestCase):
     def tearDown(self):
         self.browser.quit()
 
+    def check_for_row_in_table(self,row_text):
+        table = self.browser.find_element_by_id('id_list_table')
+        rows = table.find_elements_by_tag_name('tr')
+        self.assertIn(row_text, [row.text for row in rows])
+
     def test_start_list_retrieve_later(self):
         self.browser.get('http://localhost:8000')
 
         self.assertIn('To-Do', self.browser.title)
-        header_text = self.browser.find_element_by_tag_name('h1')
+        header_text = self.browser.find_element_by_tag_name('h1').text
         self.assertIn('To-Do', header_text)
 
         input_box = self.browser.find_element_by_id('id_new_item')
@@ -25,9 +30,11 @@ class NewVisitorTest(unittest.TestCase):
         input_box.send_keys('Buy Jullien\'s doll')
         input_box.send_keys(Keys.ENTER)
 
-        table = self.browser.find_element_by_id('id_list_table')
-        rows = table.find_elements_by_tag_name('tr')
-        self.assertTrue(any(rows.text == '1: Buy Jullien\'s doll' for row in rows))
+        # import time
+        # time.sleep(10)
+
+        self.check_for_row_in_table('1: Buy Jullien\'s doll')
+        self.check_for_row_in_table('2: Buy Jullien\'s milk')
 
         self.fail('Finish the test!')
 

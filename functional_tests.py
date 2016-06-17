@@ -12,7 +12,11 @@ class NewVisitorTest(unittest.TestCase):
     def tearDown(self):
         self.browser.quit()
 
-    def check_for_row_in_table(self,row_text):
+    def check_for_row_in_table(self, row_text):
+        input_box = self.browser.find_element_by_id('id_new_item')
+        input_box.send_keys(row_text[2:])
+        input_box.send_keys(Keys.ENTER)
+
         table = self.browser.find_element_by_id('id_list_table')
         rows = table.find_elements_by_tag_name('tr')
         self.assertIn(row_text, [row.text for row in rows])
@@ -26,9 +30,6 @@ class NewVisitorTest(unittest.TestCase):
 
         input_box = self.browser.find_element_by_id('id_new_item')
         self.assertEqual(input_box.get_attribute('placeholder'), 'Enter a to-do item')
-
-        input_box.send_keys('Buy Jullien\'s doll')
-        input_box.send_keys(Keys.ENTER)
 
         # import time
         # time.sleep(10)
